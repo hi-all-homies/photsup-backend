@@ -1,6 +1,7 @@
 package photsup.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Table(name = "USR")
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(exclude = {"username", "avatarUrl"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

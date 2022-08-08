@@ -2,6 +2,7 @@ package photsup.dao.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import photsup.dao.repository.UserRepository;
 import photsup.model.entity.User;
 
@@ -19,6 +20,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public int updateUser(User user) {
         return this.userRepo.updateUser(user.getUserId(), user.getAvatarUrl());
     }
