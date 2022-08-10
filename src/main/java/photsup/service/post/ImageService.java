@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Map;
 
 public interface ImageService {
+    String KEY = "key";
+    String URL = "url";
 
     Map<String, String> storeImage(MultipartFile image) throws IOException;
 

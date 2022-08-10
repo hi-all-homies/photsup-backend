@@ -36,7 +36,7 @@ public class ImageServiceImpl implements ImageService {
                         .build())
                 .toExternalForm();
 
-        return Map.of("key", key, "url", url);
+        return Map.of(KEY, key, URL, url);
     }
 
     @Override

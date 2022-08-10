@@ -22,7 +22,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join fetch p.likes where p.postId in (:ids)")
     List<Post> findPostsByIds(@Param("ids") List<Long> ids);
 
-    @Query(value = "from Post p left join fetch p.likes where p.postId =:postId")
+    @Query(value = "from Post p left join fetch p.author " +
+            "left join fetch p.likes where p.postId =:postId")
     Optional<Post> findPostById(@Param("postId") Long postId);
 
     @Modifying

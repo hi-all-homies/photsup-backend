@@ -8,6 +8,7 @@ import photsup.dao.repository.PostRepository;
 import photsup.dao.repository.UserRepository;
 import photsup.model.entity.Post;
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,5 +56,10 @@ public class PostDaoImpl implements PostDao {
             result = post.getLikes().add(user);
         }
         return result;
+    }
+
+    @Override
+    public Optional<Post> findById(Long postId) {
+        return this.postRepo.findPostById(postId);
     }
 }
