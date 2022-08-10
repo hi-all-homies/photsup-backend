@@ -35,4 +35,6 @@ public class Post {
     )
     private Set<User> likes = new HashSet<>();
 
+    private String awsKey;
+
 }

@@ -26,9 +26,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findPostById(@Param("postId") Long postId);
 
     @Modifying
-    @Query(value = "update Post p set p.content =:content, p.imageUrl =:imageUrl " +
-            "where p.postId =:postId")
+    @Query(value = "update Post p set p.content =:content, p.imageUrl =:imageUrl, " +
+            "p.awsKey =:awsKey where p.postId =:postId")
     int updatePost(@Param("postId") Long postId,
                    @Param("content") String content,
-                   @Param("imageUrl") String imageUrl);
+                   @Param("imageUrl") String imageUrl,
+                   @Param("awsKey") String awsKey);
 }

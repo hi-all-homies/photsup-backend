@@ -41,6 +41,7 @@ class PostRepositoryTest {
         post1.setContent("post1 content");
         post1.setCreated(new Date());
         post1.setImageUrl("post1 image url");
+        post1.setAwsKey("awsKey1");
         this.postRepo.save(post1);
 
         Post post2 = new Post();
@@ -48,6 +49,7 @@ class PostRepositoryTest {
         post2.setContent("post2 content");
         post2.setCreated(new Date());
         post2.setImageUrl("post2 image url");
+        post2.setAwsKey("awsKey2");
         this.postRepo.save(post2);
     }
 
@@ -87,7 +89,7 @@ class PostRepositoryTest {
     void updatePost(){
         int res = this.postRepo.updatePost(1L,
                 "post1 content",
-                "updated post1 imageUrl");
+                "updated post1 imageUrl", "awsKey upd");
         assertEquals(1, res);
 
         var post = this.postRepo.findById(1L).orElseThrow();
@@ -95,7 +97,7 @@ class PostRepositoryTest {
 
         int res2 = this.postRepo.updatePost(5L,
                 "post5 content",
-                "updated post5 imageUrl");
+                "updated post5 imageUrl", "awsKey5");
 
         assertEquals(0, res2);
     }
