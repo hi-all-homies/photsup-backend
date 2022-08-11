@@ -40,11 +40,10 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public boolean deleteImage(String key) {
-        return this.s3Client.deleteObject(
+    public void deleteImage(String key) {
+        this.s3Client.deleteObject(
                 builder -> builder.bucket(bucket)
                         .key(key)
-                        .build())
-                .deleteMarker();
+                        .build());
     }
 }

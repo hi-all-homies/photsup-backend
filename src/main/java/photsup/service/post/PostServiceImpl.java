@@ -10,11 +10,9 @@ import photsup.model.dto.PostSummary;
 import photsup.model.entity.Post;
 import photsup.model.entity.User;
 import photsup.service.jwt.TokenProvider;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +39,6 @@ public class PostServiceImpl implements PostService {
             post.setAuthor(currentUser);
             post.setCreated(new Date());
             post.setContent(postRequest.getContent());
-            post.setAwsKey(map.get(ImageService.KEY));
             post.setImageUrl(map.get(ImageService.URL));
 
             return this.postDao.savePost(post);
@@ -60,7 +57,6 @@ public class PostServiceImpl implements PostService {
                         .postId(p.getPostId())
                         .content(p.getContent())
                         .imageUrl(p.getImageUrl())
-                        .awsKey(p.getAwsKey())
                         .author(p.getAuthor())
                         .created(p.getCreated())
                         .likeCount(p.getLikes().size())
@@ -81,26 +77,28 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void updatePost(String token, PostRequest postRequest) {
-        var post= this.postDao.findById(postRequest.getPostId())
+        var oldPost= this.postDao.findById(postRequest.getPostId())
                 .orElseThrow();
-        long authorId = post.getAuthor().getUserId();
+        long authorId = oldPost.getAuthor().getUserId();
         long currentUserId = retrieveCurrentUserId(token);
 
         if (authorId == currentUserId){
-            post.setContent(postRequest.getContent());
-            var image = postRequest.getImage();
+            Post updatedPost = new Post();
+            updatedPost.setPostId(oldPost.getPostId());
+            updatedPost.setContent(postRequest.getContent());
+            updatedPost.setImageUrl(oldPost.getImageUrl());
 
+            var image = postRequest.getImage();
             if (image != null && !image.isEmpty() && image.getContentType().contains("image")){
                 try {
                     var map = this.imageService.storeImage(image);
-                    this.imageService.deleteImage(post.getAwsKey());
-                    post.setAwsKey(map.get(ImageService.KEY));
-                    post.setImageUrl(map.get(ImageService.URL));
+                    this.imageService.deleteImage(retrieveAwsKey(oldPost.getImageUrl()));
+                    updatedPost.setImageUrl(map.get(ImageService.URL));
                 } catch (IOException e) {
                     throw new RuntimeException(e.getMessage());
                 }
             }
-            this.postDao.updatePost(post);
+            this.postDao.updatePost(updatedPost);
         }
     }
 
@@ -111,16 +109,22 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(String token, Long postId) {
-        long authorId = this.postDao.findById(postId)
-                .orElseThrow()
-                .getAuthor().getUserId();
+         var post = this.postDao.findById(postId)
+                .orElseThrow();
+         long authorId = post.getAuthor().getUserId();
+         long currentUserId = retrieveCurrentUserId(token);
 
-        long currentUserId = retrieveCurrentUserId(token);
-        if (authorId == currentUserId)
+         if (authorId == currentUserId){
             this.postDao.deletePost(postId);
+            this.imageService.deleteImage(retrieveAwsKey(post.getImageUrl()));
+         }
     }
 
     private long retrieveCurrentUserId(String token) {
         return this.tokenProvider.verifyToken(token).getId();
+    }
+
+    private String retrieveAwsKey(String url){
+        return url.replaceFirst("https://storage.yandexcloud.net/photsup/","");
     }
 }

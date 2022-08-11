@@ -47,7 +47,6 @@ class PostServiceImplTest {
         post1.setContent("post1 content");
         post1.setCreated(new Date());
         post1.setImageUrl("post1 image url");
-        post1.setAwsKey("aws key 1");
         post1.setLikes(Set.of(user2));
 
         Post post2 = new Post();
@@ -56,7 +55,6 @@ class PostServiceImplTest {
         post2.setContent("post2 content");
         post2.setCreated(new Date());
         post2.setImageUrl("post2 image url");
-        post2.setAwsKey("aws 2");
         post2.setLikes(Set.of(user1, user2));
 
         posts = List.of(post1, post2);
@@ -135,8 +133,6 @@ class PostServiceImplTest {
         Mockito.verify(imageService, Mockito.times(1))
                 .deleteImage(Mockito.anyString());
 
-        assertTrue(() -> post1.getContent().equals(req.getContent()));
-        assertTrue(() -> post1.getImageUrl().equals("updated image url"));
 
         Mockito.when(postDao.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(posts.get(1)));

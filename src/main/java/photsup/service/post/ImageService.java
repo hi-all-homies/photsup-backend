@@ -10,5 +10,5 @@ public interface ImageService {
 
     Map<String, String> storeImage(MultipartFile image) throws IOException;
 
-    boolean deleteImage(String key);
+    void deleteImage(String key);
 }

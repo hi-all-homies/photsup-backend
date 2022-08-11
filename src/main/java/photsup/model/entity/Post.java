@@ -27,14 +27,12 @@ public class Post {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "post_likes",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> likes = new HashSet<>();
-
-    private String awsKey;
 
 }

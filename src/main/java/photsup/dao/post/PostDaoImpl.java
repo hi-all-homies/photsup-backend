@@ -36,7 +36,7 @@ public class PostDaoImpl implements PostDao {
     @Transactional
     public void updatePost(Post post) {
         this.postRepo.updatePost(
-                post.getPostId(), post.getContent(), post.getImageUrl(), post.getAwsKey());
+                post.getPostId(), post.getContent(), post.getImageUrl());
     }
 
     @Override
