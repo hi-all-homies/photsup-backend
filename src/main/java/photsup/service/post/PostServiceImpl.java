@@ -10,8 +10,11 @@ import photsup.model.dto.PostSummary;
 import photsup.model.entity.Post;
 import photsup.model.entity.User;
 import photsup.service.jwt.TokenProvider;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,7 +81,27 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void updatePost(String token, PostRequest postRequest) {
+        var post= this.postDao.findById(postRequest.getPostId())
+                .orElseThrow();
+        long authorId = post.getAuthor().getUserId();
+        long currentUserId = retrieveCurrentUserId(token);
 
+        if (authorId == currentUserId){
+            post.setContent(postRequest.getContent());
+            var image = postRequest.getImage();
+
+            if (image != null && !image.isEmpty() && image.getContentType().contains("image")){
+                try {
+                    var map = this.imageService.storeImage(image);
+                    this.imageService.deleteImage(post.getAwsKey());
+                    post.setAwsKey(map.get(ImageService.KEY));
+                    post.setImageUrl(map.get(ImageService.URL));
+                } catch (IOException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+            this.postDao.updatePost(post);
+        }
     }
 
     @Override

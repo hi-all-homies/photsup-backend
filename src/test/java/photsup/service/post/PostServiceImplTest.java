@@ -114,7 +114,35 @@ class PostServiceImplTest {
     }
 
     @Test
-    void updatePost() {
+    void updatePost() throws IOException{
+        PostRequest req = new PostRequest();
+        req.setPostId(1L);
+        req.setContent("hello world");
+        req.setImage(
+                new MockMultipartFile("image", "picture.png",
+                        MediaType.IMAGE_PNG_VALUE, "image_content".getBytes()));
+
+        var post1 = posts.get(0);
+        Mockito.when(postDao.findById(1L))
+                .thenReturn(Optional.of(post1));
+
+        Mockito.when(imageService.storeImage(Mockito.any(MultipartFile.class)))
+                .thenReturn(Map.of("key", "updated aws key", "url", "updated image url"));
+
+        postService.updatePost("token", req);
+        Mockito.verify(postDao, Mockito.times(1))
+                .updatePost(Mockito.any(Post.class));
+        Mockito.verify(imageService, Mockito.times(1))
+                .deleteImage(Mockito.anyString());
+
+        assertTrue(() -> post1.getContent().equals(req.getContent()));
+        assertTrue(() -> post1.getImageUrl().equals("updated image url"));
+
+        Mockito.when(postDao.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(posts.get(1)));
+        postService.updatePost("token", req);
+        Mockito.verify(postDao, Mockito.times(1))
+                .updatePost(Mockito.any(Post.class));
     }
 
 
