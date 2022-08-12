@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import photsup.dao.user.UserDao;
 import photsup.model.entity.User;
 import photsup.oauth2.UserPrincipal;
+import photsup.service.jwt.TokenProvider;
 
 import java.util.Collection;
 
@@ -14,6 +15,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
+    private final TokenProvider tokenProvider;
 
     @Override
     public User findUser(String uniqueKey) {
@@ -41,5 +43,10 @@ public class UserServiceImpl implements UserService {
                 .attributes(oAuth2User.getAttributes())
                 .authorities((Collection<GrantedAuthority>) oAuth2User.getAuthorities())
                 .build();
+    }
+
+    @Override
+    public String retrieveUniqueKey(String token){
+        return this.tokenProvider.verifyToken(token).getUniqueKey();
     }
 }

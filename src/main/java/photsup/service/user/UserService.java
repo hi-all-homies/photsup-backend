@@ -11,6 +11,7 @@ public interface UserService {
 
     OAuth2User storeUser(OAuth2User oAuth2User, String provider);
 
+    String retrieveUniqueKey(String token);
 
     default User userFactory(OAuth2User oAuth2User, String provider){
         User user;
