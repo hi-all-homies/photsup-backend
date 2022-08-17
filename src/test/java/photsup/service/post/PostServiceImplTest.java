@@ -3,7 +3,6 @@ package photsup.service.post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -20,6 +19,7 @@ import photsup.oauth2.UserPrincipal;
 import photsup.service.jwt.TokenProvider;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,7 +45,7 @@ class PostServiceImplTest {
         post1.setPostId(1L);
         post1.setAuthor(user1);
         post1.setContent("post1 content");
-        post1.setCreated(new Date());
+        post1.setCreated(LocalDateTime.now());
         post1.setImageUrl("post1 image url");
         post1.setLikes(Set.of(user2));
 
@@ -53,7 +53,7 @@ class PostServiceImplTest {
         post2.setPostId(2L);
         post2.setAuthor(user2);
         post2.setContent("post2 content");
-        post2.setCreated(new Date());
+        post2.setCreated(LocalDateTime.now());
         post2.setImageUrl("post2 image url");
         post2.setLikes(Set.of(user1, user2));
 

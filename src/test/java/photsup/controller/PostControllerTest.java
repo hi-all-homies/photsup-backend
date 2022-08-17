@@ -27,7 +27,7 @@ import photsup.model.entity.User;
 import photsup.oauth2.UserPrincipal;
 import photsup.service.jwt.TokenProvider;
 import photsup.service.post.PostService;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,7 +54,7 @@ class PostControllerTest {
         post = new Post();
         post.setAuthor(user);
         post.setPostId(1L);
-        post.setCreated(new Date());
+        post.setCreated(LocalDateTime.now());
         post.setImageUrl("image url");
         post.setContent("hello world");
 
@@ -74,7 +74,7 @@ class PostControllerTest {
                         .meLiked(false)
                         .content("new post "+r)
                         .likeCount(0)
-                        .created(new Date())
+                        .created(LocalDateTime.now())
                         .author(user)
                         .imageUrl("https://image"+r)
                         .build())

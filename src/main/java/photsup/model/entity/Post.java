@@ -2,9 +2,8 @@ package photsup.model.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,8 +23,8 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User author;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime created;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

@@ -11,8 +11,8 @@ import photsup.model.entity.Post;
 import photsup.model.entity.User;
 import photsup.service.jwt.TokenProvider;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +37,7 @@ public class PostServiceImpl implements PostService {
             currentUser.setUserId(retrieveCurrentUserId(token));
             Post post = new Post();
             post.setAuthor(currentUser);
-            post.setCreated(new Date());
+            post.setCreated(LocalDateTime.now());
             post.setContent(postRequest.getContent());
             post.setImageUrl(map.get(ImageService.URL));
 
@@ -53,6 +53,7 @@ public class PostServiceImpl implements PostService {
 
     private Collection<PostSummary> transform(Collection<Post> posts, final long currentUser){
         return posts.stream()
+                .sorted((p1,p2) -> p2.getPostId().compareTo(p1.getPostId()))
                 .map(p -> PostSummary.builder()
                         .postId(p.getPostId())
                         .content(p.getContent())

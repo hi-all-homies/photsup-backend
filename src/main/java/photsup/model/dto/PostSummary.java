@@ -1,9 +1,11 @@
 package photsup.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 import photsup.model.entity.User;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 @Builder
 @Getter
@@ -12,7 +14,8 @@ public class PostSummary {
     private final String content;
     private final String imageUrl;
     private final User author;
-    private final Date created;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
+    private final LocalDateTime created;
     private final int likeCount;
     private final boolean meLiked;
 }

@@ -11,7 +11,8 @@ import photsup.dao.repository.UserRepository;
 import photsup.model.entity.Post;
 import photsup.model.entity.User;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,14 +47,14 @@ class PostDaoImplTest {
         Post post1 = new Post();
         post1.setAuthor(user1);
         post1.setContent("post1 content");
-        post1.setCreated(new Date());
+        post1.setCreated(LocalDateTime.now());
         post1.setImageUrl("post1 image url");
         this.postRepo.save(post1);
 
         Post post2 = new Post();
         post2.setAuthor(user2);
         post2.setContent("post2 content");
-        post2.setCreated(new Date());
+        post2.setCreated(LocalDateTime.now());
         post2.setImageUrl("post2 image url");
         this.postRepo.save(post2);
     }
