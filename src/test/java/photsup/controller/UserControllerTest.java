@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import photsup.oauth2.UserPrincipal;
 import photsup.service.jwt.TokenProvider;
 import photsup.service.user.UserService;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -35,21 +34,6 @@ class UserControllerTest {
                         .uniqueKey("@mail.com")
                         .avatarUrl("pic.png")
                 .build());
-    }
-
-    @Test
-    void getCurrentUser() throws Exception {
-        Mockito.when(userService.retrieveUniqueKey(token))
-                        .thenReturn("unique key");
-
-        mockMvc.perform(get("/users")
-                        .header("X-Auth-Token", token))
-                .andExpect(status().isOk());
-
-        Mockito.verify(userService, Mockito.times(1))
-                        .retrieveUniqueKey(token);
-        Mockito.verify(userService, Mockito.times(1))
-                .findUser("unique key");
     }
 
     @Test

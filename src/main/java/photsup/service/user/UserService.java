@@ -1,13 +1,14 @@
 package photsup.service.user;
 
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import photsup.model.dto.UserSummary;
 import photsup.model.entity.GitHubUser;
 import photsup.model.entity.GoogleUser;
 import photsup.model.entity.User;
 
 public interface UserService {
 
-    User findUser(String uniqueKey);
+    UserSummary findUser(String uniqueKey);
 
     OAuth2User storeUser(OAuth2User oAuth2User, String provider);
 

@@ -2,6 +2,8 @@ package photsup.dao.post;
 
 import org.springframework.data.domain.Pageable;
 import photsup.model.entity.Post;
+import photsup.model.entity.User;
+
 import java.util.Collection;
 import java.util.Optional;
 
@@ -17,4 +19,8 @@ public interface PostDao {
     void updatePost(Post post);
 
     boolean addLike(Long postId, Long userId);
+
+    long countUserPosts(User user);
+
+    long countLikes(User user);
 }
