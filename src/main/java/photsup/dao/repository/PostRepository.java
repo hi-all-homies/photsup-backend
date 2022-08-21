@@ -32,4 +32,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     int updatePost(@Param("postId") Long postId,
                    @Param("content") String content,
                    @Param("imageUrl") String imageUrl);
+
+    @Query(value = "select count(pl.user_id) from post_likes pl where " +
+            "pl.post_id in(select p.post_id from post p where p.user_id =:userId)",
+            nativeQuery = true)
+    long countLikes(@Param("userId") Long userId);
 }

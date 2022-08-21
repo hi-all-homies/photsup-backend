@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUniqueKey(String uniqueKey);
 
-    @Query(value = "update User u set u.avatarUrl=:avatarUrl where u.id=:userId")
+    @Query(value = "update User u set u.avatarUrl=:avatarUrl where u.userId=:userId")
     @Modifying
     int updateUser(@Param("userId") Long userId, @Param("avatarUrl") String avatarUrl);
 }

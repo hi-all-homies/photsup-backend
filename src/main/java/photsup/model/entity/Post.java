@@ -1,5 +1,6 @@
 package photsup.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -15,6 +16,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
+    @Column(length = 666)
     private String content;
 
     private String imageUrl;
@@ -23,6 +25,7 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User author;
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime created;
 
