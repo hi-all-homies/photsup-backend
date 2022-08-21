@@ -1,6 +1,7 @@
 package photsup.service.user;
 
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import photsup.model.dto.UpdateStatusRequest;
 import photsup.model.dto.UserSummary;
 import photsup.model.entity.GitHubUser;
 import photsup.model.entity.GoogleUser;
@@ -12,7 +13,7 @@ public interface UserService {
 
     OAuth2User storeUser(OAuth2User oAuth2User, String provider);
 
-    String retrieveUniqueKey(String token);
+    void updateUserStatus(String token, UpdateStatusRequest request);
 
     default User userFactory(OAuth2User oAuth2User, String provider){
         User user;

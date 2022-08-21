@@ -16,6 +16,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
+    @Column(length = 666)
     private String content;
 
     private String imageUrl;

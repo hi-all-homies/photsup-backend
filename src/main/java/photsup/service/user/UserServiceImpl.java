@@ -6,11 +6,13 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import photsup.dao.post.PostDao;
 import photsup.dao.user.UserDao;
+import photsup.model.dto.UpdateStatusRequest;
 import photsup.model.dto.UserSummary;
 import photsup.model.entity.User;
 import photsup.oauth2.UserPrincipal;
 import photsup.service.jwt.TokenProvider;
 import java.util.Collection;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +58,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String retrieveUniqueKey(String token){
-        return this.tokenProvider.verifyToken(token).getUniqueKey();
+    @Transactional
+    public void updateUserStatus(String token, UpdateStatusRequest request){
+        String uniqueKey = this.tokenProvider.verifyToken(token).getUniqueKey();
+
+        var currentUser = this.userDao.findByUniqueKey(uniqueKey)
+                .orElseThrow();
+
+        currentUser.setStatus(request.getStatus());
     }
 }
