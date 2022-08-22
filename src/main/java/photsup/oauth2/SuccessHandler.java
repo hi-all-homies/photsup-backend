@@ -16,7 +16,7 @@ import java.io.IOException;
 public class SuccessHandler implements AuthenticationSuccessHandler {
     private final TokenProvider tokenProvider;
 
-    @Value("${redirect.url:http://localhost:3000/token?jwt=}")
+    @Value("${REDIRECT_URL:http://localhost:3000/token?jwt=}")
     private String redirectUrl;
 
     @Override
