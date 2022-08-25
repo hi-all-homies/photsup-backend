@@ -11,4 +11,6 @@ public interface UserDao {
     int updateUser(User user);
 
     Optional<User> findByUniqueKey(String uniqueKey);
+
+    Optional<User> findById(long userId);
 }

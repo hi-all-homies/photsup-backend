@@ -4,12 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import photsup.dao.post.PostDao;
+import photsup.dao.user.UserDao;
+import photsup.model.dto.PostGetLiked;
 import photsup.model.dto.PostRequest;
 import photsup.model.dto.PostSummary;
 import photsup.model.entity.Post;
 import photsup.model.entity.User;
 import photsup.service.jwt.TokenProvider;
+import photsup.service.notification.NotificationService;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -21,6 +25,8 @@ public class PostServiceImpl implements PostService {
     private final TokenProvider tokenProvider;
     private final ImageService imageService;
     private final PostDao postDao;
+    private final UserDao userDao;
+    private final NotificationService notificationService;
 
 
     @Override
@@ -104,8 +110,28 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public boolean addLike(String token, Long postId) {
-        return this.postDao.addLike(postId, retrieveCurrentUserId(token));
+        long userId =  retrieveCurrentUserId(token);
+        var user = this.userDao.findById(userId).orElseThrow();
+        var post = this.postDao.findById(postId).orElseThrow();
+
+        boolean result;
+
+        if (post.getLikes().contains(user)){
+            result = !post.getLikes().remove(user);
+        }
+        else{
+            result = post.getLikes().add(user);
+
+            var notification = PostGetLiked.builder()
+                    .liker(user.getUsername())
+                    .postId(postId)
+                    .receiver(post.getAuthor().getUniqueKey()).build();
+
+            notificationService.sendNotification(notification);
+        }
+        return result;
     }
 
     @Override

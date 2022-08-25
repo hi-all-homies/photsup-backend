@@ -11,7 +11,6 @@ import photsup.dao.repository.UserRepository;
 import photsup.model.entity.Post;
 import photsup.model.entity.User;
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -69,21 +68,6 @@ class PostDaoImplTest {
         this.userRepo.deleteAll();
     }
 
-
-    @Test
-    void addLike() {
-        var result1 = this.postDao.addLike(1L, 2L);
-        assertTrue(result1);
-        var result2 = this.postDao.addLike(1L, 2L);
-        assertFalse(result2);
-
-        assertThrows(NoSuchElementException.class,
-                () -> this.postDao.addLike(5L, 2L));
-
-        assertThrows(NoSuchElementException.class,
-                () -> this.postDao.addLike(1L, 4L));
-    }
-
     @Test
     void countUserPosts() {
         User user3 = new User();
@@ -98,13 +82,4 @@ class PostDaoImplTest {
         assertEquals(1, result2);
     }
 
-    @Test
-    void countLikes(){
-        this.postDao.addLike(1L, 1L);
-        this.postDao.addLike(1L, 2L);
-        var user1 = new User();
-        user1.setUserId(1L);
-        long count = this.postDao.countLikes(user1);
-        assertEquals(2L, count);
-    }
 }

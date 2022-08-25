@@ -29,4 +29,9 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> findByUniqueKey(String uniqueKey) {
         return this.userRepo.findByUniqueKey(uniqueKey);
     }
+
+    @Override
+    public Optional<User> findById(long userId) {
+        return this.userRepo.findById(userId);
+    }
 }

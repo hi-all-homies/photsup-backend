@@ -18,8 +18,6 @@ public interface PostDao {
 
     void updatePost(Post post);
 
-    boolean addLike(Long postId, Long userId);
-
     long countUserPosts(User user);
 
     long countLikes(User user);
