@@ -19,10 +19,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "select distinct p from Post p " +
             "left join fetch p.author " +
+            "left join fetch p.comments " +
             "left join fetch p.likes where p.postId in (:ids)")
     List<Post> findPostsByIds(@Param("ids") List<Long> ids);
 
-    @Query(value = "from Post p left join fetch p.author " +
+    @Query(value = "from Post p left join fetch p.comments c " +
+            "left join fetch c.author " +
+            "left join fetch p.author " +
             "left join fetch p.likes where p.postId =:postId")
     Optional<Post> findPostById(@Param("postId") Long postId);
 

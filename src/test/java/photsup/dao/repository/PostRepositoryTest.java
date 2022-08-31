@@ -68,6 +68,7 @@ class PostRepositoryTest {
     void findPostsByIds() {
         var posts = this.postRepo.findPostsByIds(List.of(1L,2L));
         assertEquals(2, posts.size());
+        assertEquals(0, posts.get(0).getComments().size());
         boolean result = posts.stream()
                 .anyMatch(p -> p.getContent().equals("post1 content"));
         assertTrue(result);
@@ -78,6 +79,10 @@ class PostRepositoryTest {
         var post = this.postRepo.findPostById(2L);
         assertNotNull(post.get());
         assertEquals("post2 content", post.get().getContent());
+
+        assertEquals(0, post.get().getLikes().size());
+        assertEquals(0, post.get().getComments().size());
+        assertEquals("git_uniqueName", post.get().getAuthor().getUniqueKey());
 
         final var post2 = this.postRepo.findPostById(5L);
         assertThrows(NoSuchElementException.class, () -> post2.get());

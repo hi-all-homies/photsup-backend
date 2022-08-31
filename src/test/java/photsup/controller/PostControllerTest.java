@@ -1,6 +1,7 @@
 package photsup.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import photsup.model.dto.CommentRequest;
 import photsup.model.dto.PostRequest;
 import photsup.model.dto.PostSummary;
 import photsup.model.entity.Post;
@@ -43,6 +46,8 @@ class PostControllerTest {
     User user;
     Post post;
     String token;
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @BeforeAll
     void setUp(){
@@ -147,5 +152,21 @@ class PostControllerTest {
 
         Mockito.verify(postService, Mockito.times(1))
                 .deletePost(Mockito.anyString(), Mockito.anyLong());
+    }
+
+    @Test
+    void addComment() throws Exception{
+        CommentRequest commentReq = new CommentRequest();
+        commentReq.setContent("comment payload");
+        String requestBody = this.mapper.writeValueAsString(commentReq);
+
+        mockMvc.perform(post("/posts/1/comment")
+                        .header("X-Auth-Token", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk());
+
+        Mockito.verify(postService, Mockito.times(1))
+                .addComment(Mockito.anyString(), Mockito.any(CommentRequest.class));
     }
 }

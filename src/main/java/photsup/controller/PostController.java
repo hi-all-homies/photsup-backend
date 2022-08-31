@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import photsup.model.dto.CommentRequest;
 import photsup.model.dto.PostRequest;
 import photsup.model.dto.PostSummary;
+import photsup.model.entity.Comment;
 import photsup.model.entity.Post;
 import photsup.service.post.PostService;
 import java.util.Collection;
@@ -61,5 +63,16 @@ public class PostController {
 
         this.postService.deletePost(token, postId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/comment")
+    public ResponseEntity<Comment> addComment(
+            @RequestHeader("X-Auth-Token") String token,
+            @PathVariable("id") long postId,
+            @RequestBody CommentRequest commentRequest){
+
+        commentRequest.setPostId(postId);
+        return ResponseEntity.ok(
+                this.postService.addComment(token, commentRequest));
     }
 }

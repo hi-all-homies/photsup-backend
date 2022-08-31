@@ -37,4 +37,11 @@ public class Post {
     )
     private Set<User> likes = new HashSet<>();
 
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST, CascadeType.REMOVE
+    }, orphanRemoval = true)
+    @JoinTable(joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    private Set<Comment> comments = new HashSet<>();
 }

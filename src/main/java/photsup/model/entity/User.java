@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "USR")
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(exclude = {"username", "avatarUrl"})
+@EqualsAndHashCode(exclude = {"username", "avatarUrl", "status"})
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User {
     @Id

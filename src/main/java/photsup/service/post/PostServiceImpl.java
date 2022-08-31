@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import photsup.dao.post.PostDao;
 import photsup.dao.user.UserDao;
+import photsup.model.dto.CommentRequest;
 import photsup.model.dto.PostGetLiked;
 import photsup.model.dto.PostRequest;
 import photsup.model.dto.PostSummary;
+import photsup.model.entity.Comment;
 import photsup.model.entity.Post;
 import photsup.model.entity.User;
 import photsup.service.jwt.TokenProvider;
@@ -67,6 +69,7 @@ public class PostServiceImpl implements PostService {
                         .author(p.getAuthor())
                         .created(p.getCreated())
                         .likeCount(p.getLikes().size())
+                        .commentCount(p.getComments().size())
                         .meLiked(p.getLikes().stream()
                                 .anyMatch(user -> user.getUserId().equals(currentUser)))
                         .build())
@@ -147,8 +150,33 @@ public class PostServiceImpl implements PostService {
          }
     }
 
+
+    @Transactional
+    @Override
+    public Comment addComment(String token, CommentRequest commentRequest) {
+        Comment comment = new Comment();
+        comment.setContent(commentRequest.getContent());
+        comment.setAuthor(retrieveCurrentUser(token));
+
+        var post = this.postDao.findById(commentRequest.getPostId())
+                .orElseThrow();
+        post.getComments().add(comment);
+
+        return comment;
+    }
+
     private long retrieveCurrentUserId(String token) {
         return this.tokenProvider.verifyToken(token).getId();
+    }
+
+    private User retrieveCurrentUser(String token) {
+        var usrPrincipal = this.tokenProvider.verifyToken(token);
+        User user = new User();
+        user.setUserId(usrPrincipal.getId());
+        user.setUsername(usrPrincipal.getUsername());
+        user.setAvatarUrl(usrPrincipal.getAvatarUrl());
+        user.setUniqueKey(usrPrincipal.getUniqueKey());
+        return user;
     }
 
     private String retrieveAwsKey(String url){

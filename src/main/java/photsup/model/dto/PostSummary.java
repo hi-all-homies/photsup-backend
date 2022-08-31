@@ -18,4 +18,5 @@ public class PostSummary {
     private final LocalDateTime created;
     private final int likeCount;
     private final boolean meLiked;
+    private final int commentCount;
 }
