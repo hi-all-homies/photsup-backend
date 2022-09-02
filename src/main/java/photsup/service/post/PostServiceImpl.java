@@ -19,7 +19,9 @@ import photsup.service.notification.NotificationService;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +61,7 @@ public class PostServiceImpl implements PostService {
     private static final int PAGE_SIZE = 7;
     private static final Sort SORT = Sort.by(Sort.Direction.DESC, "postId");
 
-    private Collection<PostSummary> transform(Collection<Post> posts, final long currentUser){
+    private Stream<PostSummary> transform(Collection<Post> posts, final long currentUser){
         return posts.stream()
                 .sorted((p1,p2) -> p2.getPostId().compareTo(p1.getPostId()))
                 .map(p -> PostSummary.builder()
@@ -72,8 +74,8 @@ public class PostServiceImpl implements PostService {
                         .commentCount(p.getComments().size())
                         .meLiked(p.getLikes().stream()
                                 .anyMatch(user -> user.getUserId().equals(currentUser)))
-                        .build())
-                .collect(Collectors.toList());
+                        .comments(p.getComments())
+                        .build());
     }
 
     @Override
@@ -82,8 +84,20 @@ public class PostServiceImpl implements PostService {
 
         var posts = this.postDao.findPosts(pageRequest);
 
-        return this.transform(posts, retrieveCurrentUserId(token));
+        return this.transform(posts, retrieveCurrentUserId(token))
+                .collect(Collectors.toList());
     }
+
+
+    @Override
+    public PostSummary findById(String token, long postId) {
+        var post = this.postDao.findById(postId)
+                .orElseThrow();
+
+        return transform(List.of(post), retrieveCurrentUserId(token))
+                .findFirst().get();
+    }
+
 
     @Override
     public void updatePost(String token, PostRequest postRequest) {

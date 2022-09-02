@@ -3,8 +3,10 @@ package photsup.model.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
+import photsup.model.entity.Comment;
 import photsup.model.entity.User;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 
 @Builder
@@ -19,4 +21,6 @@ public class PostSummary {
     private final int likeCount;
     private final boolean meLiked;
     private final int commentCount;
+
+    private final Set<Comment> comments;
 }

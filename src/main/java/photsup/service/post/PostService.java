@@ -20,4 +20,6 @@ public interface PostService {
     void deletePost(String token, Long postId);
 
     Comment addComment(String token, CommentRequest commentRequest);
+
+    PostSummary findById(String token, long postId);
 }

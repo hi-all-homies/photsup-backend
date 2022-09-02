@@ -75,4 +75,13 @@ public class PostController {
         return ResponseEntity.ok(
                 this.postService.addComment(token, commentRequest));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PostSummary> findPostById(
+            @PathVariable("id") long postId,
+            @RequestHeader("X-Auth-Token") String token){
+
+        var postSummary = this.postService.findById(token, postId);
+        return ResponseEntity.ok(postSummary);
+    }
 }
